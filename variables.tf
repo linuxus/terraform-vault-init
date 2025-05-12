@@ -7,7 +7,11 @@ variable "aws_region" {
 variable "deployment_id" {
   description = "Vault deployment ID when successfully completed a terraform apply in TF Cloud"
   type        = string
+<<<<<<< HEAD
   default     = "acme-id"
+=======
+  default     = "ws-i8r9uytsqyeznuer"
+>>>>>>> 7893cea (first commit)
 }
 
 variable "vault_deployment_workspace" {
