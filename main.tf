@@ -37,6 +37,18 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Create a ConfigMap to store the initialization script
+resource "kubernetes_config_map" "vault_init_script" {
+  metadata {
+    name      = "vault-init-script"
+    namespace = local.vault_namespace
+  }
+
+  data = {
+    "initialize-vault.sh" = file("${path.module}/scripts/initialize-vault.sh")
+  }
+}
+
 # Original job resource with wait_for_completion set to false
 resource "kubernetes_job" "vault_init_job" {
   metadata {
