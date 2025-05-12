@@ -1,3 +1,42 @@
+terraform {
+  # Terraform Cloud backend configuration
+  backend "remote" {
+    organization = "abdi-sbx"
+    
+    workspaces {
+      name = "terraform-vault-init"
+    }
+  }
+}
+
+# Access remote state from the Vault deployment workspace
+data "terraform_remote_state" "vault_deployment" {
+  backend = "remote"
+  
+  config = {
+    organization = "abdi-sbx"
+    workspaces = {
+      name = var.vault_deployment_workspace
+    }
+  }
+}
+# Access remote state from the EKS deployment workspace
+data "terraform_remote_state" "eks_deployment" {
+  backend = "remote"
+  
+  config = {
+    organization = "abdi-sbx"
+    workspaces = {
+      name = var.eks_deployment_workspace
+    }
+  }
+}
+
+# Configure AWS provider using outputs from the Vault deployment workspace
+provider "aws" {
+  region = var.aws_region
+}
+
 # Original job resource with wait_for_completion set to false
 resource "kubernetes_job" "vault_init_job" {
   metadata {
