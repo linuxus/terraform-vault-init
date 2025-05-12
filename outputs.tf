@@ -13,12 +13,12 @@ output "monitoring_command" {
   value       = "kubectl logs -n ${local.vault_namespace} -l job-name=${kubernetes_job.vault_init_job.metadata[0].name} -f"
 }
 
-output "configmap_check_command" {
-  description = "Command to check if initialization completed"
-  value       = "kubectl get configmap -n ${local.vault_namespace} vault-init-completion-marker-${local.deployment_id}"
-}
+# output "configmap_check_command" {
+#   description = "Command to check if initialization completed"
+#   value       = "kubectl get configmap -n ${local.vault_namespace} vault-init-completion-marker-${local.deployment_id}"
+# }
 
-output "keys_configmap_name" {
-  description = "Name of the ConfigMap that will contain Vault keys upon successful initialization"
-  value       = "vault-init-results-${local.deployment_id}"
-}
+# output "keys_configmap_name" {
+#   description = "Name of the ConfigMap that will contain Vault keys upon successful initialization"
+#   value       = "vault-init-results-${local.deployment_id}"
+# }
