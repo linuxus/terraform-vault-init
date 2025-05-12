@@ -280,10 +280,4 @@ data "kubernetes_config_map" "init_results" {
     name      = "vault-init-results-${local.deployment_id}"
     namespace = local.vault_namespace
   }
-  
-  # Only try to read this after the monitoring is done
-  
-  timeouts {
-    read = "5m"
-  }
 }
