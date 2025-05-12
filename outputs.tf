@@ -1,11 +1,6 @@
-output "initialization_status" {
-  description = "Status of the Vault initialization"
-  value       = "Vault cluster successfully initialized and unsealed"
-}
-
-output "vault_service_name" {
-  description = "The name of the Vault Kubernetes service"
-  value       = local.vault_service_name
+output "initialization_job_name" {
+  description = "Name of the Vault initialization job"
+  value       = kubernetes_job.vault_init_job.metadata[0].name
 }
 
 output "vault_namespace" {
@@ -13,20 +8,17 @@ output "vault_namespace" {
   value       = local.vault_namespace
 }
 
-output "initialization_timestamp" {
-  description = "Timestamp when Vault was initialized"
-  value       = length(data.kubernetes_config_map.init_results) > 0 ? lookup(data.kubernetes_config_map.init_results[0].data, "timestamp", "Unknown") : "Initialization in progress"
+output "monitoring_command" {
+  description = "Command to check initialization status"
+  value       = "kubectl logs -n ${local.vault_namespace} -l job-name=${kubernetes_job.vault_init_job.metadata[0].name} -f"
 }
 
-output "root_token_stored" {
-  description = "Indicates whether the root token is safely stored in the ConfigMap"
-  value       = length(data.kubernetes_config_map.init_results) > 0 ? contains(keys(data.kubernetes_config_map.init_results[0].binary_data), "vault-keys.txt") : false
-  sensitive   = false
+output "configmap_check_command" {
+  description = "Command to check if initialization completed"
+  value       = "kubectl get configmap -n ${local.vault_namespace} vault-init-completion-marker-${local.deployment_id}"
 }
 
-# Optional: Add an output to securely retrieve keys if authorized
-output "vault_keys_configmap" {
-  description = "Name of the ConfigMap containing Vault keys"
+output "keys_configmap_name" {
+  description = "Name of the ConfigMap that will contain Vault keys upon successful initialization"
   value       = "vault-init-results-${local.deployment_id}"
-  sensitive   = false
 }
