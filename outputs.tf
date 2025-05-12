@@ -15,12 +15,12 @@ output "vault_namespace" {
 
 output "initialization_timestamp" {
   description = "Timestamp when Vault was initialized"
-  value       = lookup(data.kubernetes_config_map.init_results.data, "timestamp", "Unknown")
+  value       = length(data.kubernetes_config_map.init_results) > 0 ? lookup(data.kubernetes_config_map.init_results[0].data, "timestamp", "Unknown") : "Initialization in progress"
 }
 
 output "root_token_stored" {
   description = "Indicates whether the root token is safely stored in the ConfigMap"
-  value       = contains(keys(data.kubernetes_config_map.init_results.binary_data), "vault-keys.txt")
+  value       = length(data.kubernetes_config_map.init_results) > 0 ? contains(keys(data.kubernetes_config_map.init_results[0].binary_data), "vault-keys.txt") : false
   sensitive   = false
 }
 

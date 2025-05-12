@@ -287,7 +287,7 @@ resource "null_resource" "monitor_vault_init" {
 
 # Check for the results after monitoring
 data "kubernetes_config_map" "init_results" {
-  depends_on = [null_resource.monitor_vault_init]
+  count = null_resource.monitor_vault_init.id != "" ? 1 : 0
   
   metadata {
     name      = "vault-init-results-${local.deployment_id}"
