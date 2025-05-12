@@ -32,7 +32,7 @@ data "terraform_remote_state" "eks_deployment" {
   }
 }
 
-# Configure Kubernetes provider - add this near the top of your file
+# Configure Kubernetes provider
 provider "kubernetes" {
   # Use your EKS cluster configuration
   host                   = local.cluster_endpoint
