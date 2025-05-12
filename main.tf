@@ -208,7 +208,7 @@ resource "null_resource" "monitor_vault_init" {
   
   # Use a timestamp trigger to ensure this always runs
   triggers = {
-    job_creation_time = kubernetes_job.vault_init_job.metadata[0].creation_timestamp
+  job_id = kubernetes_job.vault_init_job.id
   }
   
   provisioner "local-exec" {
@@ -255,7 +255,7 @@ resource "null_resource" "monitor_vault_init" {
           exit 1
         fi
         
-        echo "Job still running, waiting for ${sleep_interval} seconds..."
+        echo "Job still running, waiting for $${sleep_interval} seconds..."
         sleep $sleep_interval
         attempt=$((attempt+1))
       done
