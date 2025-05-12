@@ -37,6 +37,60 @@ provider "aws" {
   region = var.aws_region
 }
 
+# Create a ServiceAccount for the initialization job
+resource "kubernetes_service_account" "vault_init_sa" {
+  metadata {
+    name      = "vault-init-sa"
+    namespace = local.vault_namespace
+  }
+}
+
+# Create a Role for the ServiceAccount with necessary permissions
+resource "kubernetes_role" "vault_init_role" {
+  metadata {
+    name      = "vault-init-role"
+    namespace = local.vault_namespace
+  }
+
+  rule {
+    api_groups = [""]
+    resources  = ["pods", "pods/exec", "pods/log", "services", "configmaps", "secrets"]
+    verbs      = ["get", "list", "create", "delete", "patch", "update", "watch"]
+  }
+  
+  rule {
+    api_groups = ["apps"]
+    resources  = ["statefulsets", "statefulsets/scale"]
+    verbs      = ["get", "list", "patch", "update", "watch"]
+  }
+  
+  rule {
+    api_groups = ["batch"]
+    resources  = ["jobs"]
+    verbs      = ["get", "list", "watch"]
+  }
+}
+
+# Bind the Role to the ServiceAccount
+resource "kubernetes_role_binding" "vault_init_rb" {
+  metadata {
+    name      = "vault-init-rb"
+    namespace = local.vault_namespace
+  }
+
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "Role"
+    name      = kubernetes_role.vault_init_role.metadata[0].name
+  }
+
+  subject {
+    kind      = "ServiceAccount"
+    name      = kubernetes_service_account.vault_init_sa.metadata[0].name
+    namespace = local.vault_namespace
+  }
+}
+
 # Create a ConfigMap to store the initialization script
 resource "kubernetes_config_map" "vault_init_script" {
   metadata {
