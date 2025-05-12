@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "deployment_id" {
   description = "Vault deployment ID when successfully completed a terraform apply in TF Cloud"
   type        = string
-  default     = "acme-id"
+  default     = "ws-i8r9uytsqyeznuer"
 }
 
 variable "vault_deployment_workspace" {
@@ -31,5 +31,5 @@ variable "organization" {
 variable "keys_backup_bucket" {
   description = "Optional: S3 bucket name to store encrypted Vault keys backup"
   type        = string
-  default     = ""
+  default     = "acme-bucket-vault"
 }
