@@ -1,9 +1,9 @@
 # Extract required values from the remote state
 locals {
   # EKS Cluster Details
-  cluster_name          = data.terraform_remote_state.eks_deployment.outputs.eks_cluster_name
-  cluster_endpoint      = data.terraform_remote_state.eks_deployment.outputs.eks_cluster_endpoint
-  cluster_ca_certificate = data.terraform_remote_state.eks_deployment.outputs.eks_cluster_certificate_authority_data
+  cluster_name          = data.terraform_remote_state.eks_deployment.outputs.cluster_name
+  cluster_endpoint      = data.terraform_remote_state.eks_deployment.outputs.cluster_endpoint
+  cluster_ca_certificate = data.terraform_remote_state.eks_deployment.outputs.cluster_certificate_authority_data
   region                = var.aws_region
   
   # Vault Details
