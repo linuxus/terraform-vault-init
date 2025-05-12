@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "deployment_id" {
   description = "Vault deployment ID when successfully completed a terraform apply in TF Cloud"
   type        = string
-  default     = "ws-i8r9uytsqyeznuer"
+  default     = "acme-id"
 }
 
 variable "vault_deployment_workspace" {
