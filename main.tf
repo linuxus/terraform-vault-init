@@ -32,6 +32,19 @@ data "terraform_remote_state" "eks_deployment" {
   }
 }
 
+# Configure Kubernetes provider
+provider "kubernetes" {
+  # Use your EKS cluster configuration
+  host                   = local.cluster_endpoint
+  cluster_ca_certificate = base64decode(local.cluster_ca_certificate)
+  token                  = data.aws_eks_cluster_auth.this.token
+}
+
+# Get EKS cluster authentication token
+data "aws_eks_cluster_auth" "this" {
+  name = local.cluster_name
+}
+
 # Configure AWS provider using outputs from the Vault deployment workspace
 provider "aws" {
   region = var.aws_region
