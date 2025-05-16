@@ -49,20 +49,6 @@ data "aws_eks_cluster_auth" "this" {
   name = local.cluster_name
 }
 
-# Extract required values from the remote state
-locals {
-  # EKS Cluster Details
-  cluster_name          = data.terraform_remote_state.eks_deployment.outputs.cluster_name
-  cluster_endpoint      = data.terraform_remote_state.eks_deployment.outputs.cluster_endpoint
-  cluster_ca_certificate = data.terraform_remote_state.eks_deployment.outputs.cluster_certificate_authority_data
-  region                = var.aws_region
-  
-  # Vault Details
-  vault_namespace       = data.terraform_remote_state.vault_deployment.outputs.vault_namespace
-  vault_service_name    = data.terraform_remote_state.vault_deployment.outputs.vault_service_name
-  deployment_id         = var.deployment_id
-}
-
 # Create a ConfigMap with the initialization script
 resource "kubernetes_config_map" "vault_init_script" {
   metadata {
